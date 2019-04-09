@@ -280,7 +280,7 @@ export class MigrationExecutor {
      */
     protected getMigrations(): Migration[] {
         const migrations = this.connection.migrations.map(migration => {
-            const migrationClassName = (migration.constructor as any).name;
+            const migrationClassName = migration.className;
             const migrationTimestamp = parseInt(migrationClassName.substr(-13));
             if (!migrationTimestamp)
                 throw new Error(`${migrationClassName} migration name is wrong. Migration class name should have a JavaScript timestamp appended.`);
@@ -320,9 +320,9 @@ export class MigrationExecutor {
             values["timestamp"] = migration.timestamp;
             values["name"] = migration.name;
         }
-        if (this.connection.driver instanceof MongoDriver) {  
+        if (this.connection.driver instanceof MongoDriver) {
             const mongoRunner = queryRunner as MongoQueryRunner;
-            mongoRunner.databaseConnection.db(this.connection.driver.database!).collection(this.migrationsTableName).insert(values);               
+            mongoRunner.databaseConnection.db(this.connection.driver.database!).collection(this.migrationsTableName).insert(values);
         } else {
             const qb = queryRunner.manager.createQueryBuilder();
             await qb.insert()
@@ -348,7 +348,7 @@ export class MigrationExecutor {
 
         if (this.connection.driver instanceof MongoDriver) {
             const mongoRunner = queryRunner as MongoQueryRunner;
-            mongoRunner.databaseConnection.db(this.connection.driver.database!).collection(this.migrationsTableName).deleteOne(conditions);               
+            mongoRunner.databaseConnection.db(this.connection.driver.database!).collection(this.migrationsTableName).deleteOne(conditions);
         } else {
             const qb = queryRunner.manager.createQueryBuilder();
             await qb.delete()

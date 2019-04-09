@@ -5,6 +5,8 @@ import {QueryRunner} from "../query-runner/QueryRunner";
  */
 export interface MigrationInterface {
 
+    className: string;
+
     /**
      * Run the migrations.
      */
